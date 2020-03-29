@@ -7,7 +7,9 @@
  */
 
 import React, {useState} from 'react';
-import {View, Button, StyleSheet} from 'react-native';
+import {View, Button, StyleSheet, FlatList} from 'react-native';
+import GroceryInput from './GroceryInput';
+import GroceryItem from './GroceryItem';
 
 export default function App() {
   const [groceries, setGroceries] = useState([]);
@@ -28,9 +30,29 @@ export default function App() {
     });
   };
 
+  const cancelGroceryAdditonHandler = () => {
+    setIsAddGroceries(false);
+  };
+
   return (
     <View style={styles.screen}>
       <Button title="Add Groceries" onPress={() => setIsAddGroceries(true)} />
+      <GroceryInput
+        visible={isAddGroceries}
+        onAddGrocery={addGroceryHandler}
+        onCancel={cancelGroceryAdditonHandler}
+      />
+      <FlatList
+        keyExtractor={(item, index) => item.id}
+        data={groceries}
+        renderItem={(itemData) => (
+          <GroceryItem
+            id={itemData.item.id}
+            onDelete={removeGroceryHandler}
+            title={itemData.item.value}
+          />
+        )}
+      />
     </View>
   );
 }
